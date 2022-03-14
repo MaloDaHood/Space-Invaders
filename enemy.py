@@ -1,5 +1,6 @@
 import pygame
 import random
+import time
 
 COLORS = ["R", "G", "B"]
 
@@ -15,6 +16,10 @@ class Enemy:
         
         # We load the enemy's image using its color
         self.image = pygame.image.load("assets/enemy_" + self.color + ".png")
+        
+        self.isAlive = True
+        
+        self.start_time = time.time()
         
     # We return the enemy's position
     def get_position(self) -> tuple[int, int]:
@@ -35,3 +40,24 @@ class Enemy:
     # We move the enemy by one pixel towards the bottom of the screen
     def move_down(self) -> None:
         self.position = (self.position[0], self.position[1] + 1)
+        
+    def is_alive(self) -> bool:
+        return self.isAlive
+    
+    def is_on_screen(self) -> bool:
+        
+        if self.position[1] < 820:
+            
+            return True
+        
+        return False
+    
+    def can_shoot(self) -> bool:
+        
+        if time.time() - self.start_time > 1:
+            
+            self.start_time = time.time()
+            
+            return True
+        
+        return False
