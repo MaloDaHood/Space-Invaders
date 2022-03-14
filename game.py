@@ -1,4 +1,5 @@
 import pygame
+import time
 
 from player import Player
 from enemy import Enemy
@@ -32,6 +33,8 @@ class Game:
         # Main Game loop
         while self.running:
             
+            start = time.time()
+            
             # We check player inputs
             self.handle_inputs()
             
@@ -41,25 +44,16 @@ class Game:
             # We set the player's position on the mouse cursor
             self.player.set_position_on_cursor()
             
-            for enemy in self.enemies:
-                
-                # We make each enemy move each frame
-                enemy.move_down()
+            self.handle_enemies()
             
-                # We display each enemy on the screen
-                self.display(enemy)
-                
-            for laser in self.lasers:
-                
-                # We make each laser move each frame
-                laser.move()
-                
-                # We display each laser on the screen
-                self.display(laser)
+            self.handle_lasers()
             
             # We display the player on the screen
             self.display(self.player)
             
+            # Debug
+            print(self.lasers)
+                
             # We update the window to show our changes
             pygame.display.flip()
         
@@ -82,6 +76,50 @@ class Game:
                 
                 self.lasers.append(Laser(self.player))
                 
+            if event.type == pygame.KEYDOWN:
+                
+                self.enemies.append(Enemy())
+                
     # We display an object on the screen (the player or an enemy)
     def display(self, object :Player|Enemy|Laser) -> None:
         self.window.blit(object.get_image(), object.get_position())
+        
+    def handle_enemies(self) -> None:
+        
+        for i in range(len(self.enemies)):
+        
+            if self.enemies[i].is_alive() and self.enemies[i].is_on_screen():
+                
+                # We make each enemy move each frame
+                self.enemies[i].move_down()
+            
+                # We display each enemy on the screen
+                self.display(self.enemies[i])
+                
+                if self.enemies[i].can_shoot():
+                    
+                    self.lasers.append(Laser(self.enemies[i]))
+                
+            else:
+                
+                self.enemies.pop(i)
+                
+                break
+                
+    def handle_lasers(self) -> None:
+        
+        for i in range(len(self.lasers)):
+        
+            if self.lasers[i].is_on_screen():
+                
+                # We make each enemy move each frame
+                self.lasers[i].move()
+            
+                # We display each enemy on the screen
+                self.display(self.lasers[i])
+                
+            else:
+                
+                self.lasers.pop(i)
+                
+                break

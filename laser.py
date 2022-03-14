@@ -1,4 +1,5 @@
 from msilib.schema import Directory
+from operator import truediv
 import pygame
 
 from player import Player
@@ -18,7 +19,7 @@ class Laser:
         
         else:
             
-            self.position = (object.get_position()[0] + (object.get_image().get_width() // 2), object.get_position()[1] + (object.get_image().get_height() // 2))
+            self.position = (object.get_position()[0] - (object.get_image().get_width() // 2), object.get_position()[1] + (object.get_image().get_height() // 2))
         
             self.image = pygame.image.load("assets/laser_" + object.get_color() + ".png")
         
@@ -32,3 +33,11 @@ class Laser:
             
     def move(self) -> None:
         self.position = (self.position[0], self.position[1] + self.direction)
+        
+    def is_on_screen(self) -> bool:
+        
+        if self.position[1] < 800 and self.position[1] > -50:
+            
+            return True
+        
+        return False
