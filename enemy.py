@@ -19,7 +19,11 @@ class Enemy:
         
         self.isAlive = True
         
+        # We create a clock to know when the enemy can shoot
         self.start_time = time.time()
+        
+        # We set a random speed for the enemy
+        self.speed = random.randint(1, 3)
         
     # We return the enemy's position
     def get_position(self) -> tuple[int, int]:
@@ -37,27 +41,39 @@ class Enemy:
     def get_image(self) -> pygame.surface.Surface:
         return self.image
     
-    # We move the enemy by one pixel towards the bottom of the screen
+    # We move the enemy by self.speed pixel(s) towards the bottom of the screen
     def move_down(self) -> None:
-        self.position = (self.position[0], self.position[1] + 1)
+        self.position = (self.position[0], self.position[1] + self.speed)
         
+    # We return True if the enemy is alive
     def is_alive(self) -> bool:
         return self.isAlive
     
+    # We kill the enemy
+    def die(self) -> None:
+        self.isAlive = False
+    
+    # We check if the enemy is still on the screen
     def is_on_screen(self) -> bool:
-        
-        if self.position[1] < 820:
-            
+        # We check if it hasn't reached the bottom of the screen
+        if self.position[1] < 810:
             return True
-        
+        # Otherwise we return False
         return False
     
+    # We check if the enemy can shoot
     def can_shoot(self) -> bool:
-        
+        # We check if the last shot was more than a second ago
         if time.time() - self.start_time > 1:
-            
+            # We reset the clock
             self.start_time = time.time()
-            
             return True
-        
+        # Otherwise we return False
         return False
+    
+    # We return the image's rectangle with the right coordinates
+    def get_rect(self) -> pygame.rect.Rect:
+        rect = self.image.get_rect()
+        rect.x = self.position[0]
+        rect.y = self.position[1]
+        return rect
