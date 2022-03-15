@@ -17,7 +17,7 @@ class Laser:
             # We set its position to the center of the player's image 
             self.position = (object.position[0] + ((object.image.get_width() // 2) - (self.image.get_width() // 2)), object.position[1] - (object.image.get_height() // 2))
             
-            # We set its direction (+/-) and speed (6)
+            # We set its direction (+/-) and speed (int)
             self.__direction = -constants.LASER_SPEED
         
         # Otherwise it comes from an enemy
@@ -29,7 +29,7 @@ class Laser:
             # We set its position to the center of the enemy's image 
             self.position = (object.position[0] + ((object.image.get_width() // 2) - (self.image.get_width() // 2)), object.position[1] + (object.image.get_height() // 2) + 20)
 
-            # We set its direction (+/-) and speed (6)
+            # We set its direction (+/-) and speed (int)
             self.__direction = constants.LASER_SPEED
             
         self.is_alive = True

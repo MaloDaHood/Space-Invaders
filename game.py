@@ -33,6 +33,7 @@ class Game:
         # The main clock used to spawn enemies in
         self.__start_time = time.time()
         
+        # We load the font
         self.__font = pygame.font.Font("assets/akira.otf", 32)
         
     def run(self) -> None:
@@ -49,6 +50,7 @@ class Game:
             # We display the background on the screen
             self.__window.blit(self.__backgroud, (0, 0))
                         
+            # We display the number of lives the player has left
             self.display_lives()   
                     
             # We set the player's position on the mouse cursor
@@ -103,16 +105,39 @@ class Game:
                 
                 # We create a new laser
                 self.__lasers.append(Laser(self.__player))
-                
-    # We display an object on the screen (the player or an enemy)
-    def display(self, object :Player|Enemy|Laser) -> None:
-        self.__window.blit(object.image, object.get_rect())
+              
+    # We display the number of lives the player has left  
+    def display_lives(self) -> None:
+        
+        # We define the text we want to dispay
+        text = self.__font.render(str(self.__player.lives) + "/" + str(constants.NUMBER_OF_LIVES), True, (255, 0, 0))
+        
+        # We display it to the sreen
+        self.__window.blit(text, (constants.WINDOW_WIDTH - (constants.WINDOW_WIDTH // 8), 20))
+        
+    # We return an updated version of the given list (we remove the dead enemies or lasers)
+    def update(self, origin_list :list) -> list:
+        
+        new_list = []
+        
+        # We loop through each object in the list
+        for element in origin_list:
             
+            # We check if the object has .is_alive == True
+            if element.is_alive:
+                
+                # We add the object to the new list
+                new_list.append(element)
+                
+        # We return the new list containing only living objects
+        return new_list    
+        
     # We handle all collisions
     def handle_collisions(self) -> None:
         
-        self.update_lasers_list()
-        self.update_enemies_list()
+        # We update both lists
+        self.__enemies = self.update(self.__enemies)
+        self.__lasers = self.update(self.__lasers)
         
         # We loop through each laser
         for laser in self.__lasers:
@@ -134,14 +159,14 @@ class Game:
                 
                 # We remove a life from the player
                 self.__player.lives -= 1
-                
-                print("Laser hit")
-                
+                                
                 # We change the laser's state
                 laser.is_alive = False
                 
-        self.update_enemies_list()        
+        # We update the enemies list once again to take into account what we might have modified right above
+        self.__enemies = self.update(self.__enemies)   
             
+        # We loop again through the enemies (needed for stability)
         for enemy in self.__enemies:
             
             # We check if the enemy intersects with the player
@@ -149,78 +174,65 @@ class Game:
                 
                 # We remove a life from the player
                 self.__player.lives -= 1
-                
-                print("Enemy hit")
-                
+                                
                 # We kill the enemy
-                enemy.is_alive = False
-                
-    def display_lives(self) -> None:
-        
-        text = self.__font.render(str(self.__player.lives) + "/3", True, (255, 0, 0))
-        
-        self.__window.blit(text, (constants.WINDOW_WIDTH - (constants.WINDOW_WIDTH // 8), 20))
-        
-    def update_enemies_list(self) -> None:
-        
-        new_enemies_list = []
-        
-        for enemy in self.__enemies:
-            
-            if enemy.is_alive:
-                
-                new_enemies_list.append(enemy)
-        
-        self.__enemies = new_enemies_list
-                
-    def update_lasers_list(self) -> None:
-        
-        new_lasers_list = []
-        
-        for laser in self.__lasers:
-            
-            if laser.is_alive:
-                
-                new_lasers_list.append(laser)
-                
-        self.__lasers = new_lasers_list
-    
-    # We handle all te enemies logic
-    def handle_enemies(self) -> None:
-        
-        self.update_enemies_list()
-        
-        for enemy in self.__enemies:
-            
-            if enemy.is_on_screen():
-                
-                enemy.move_down()
-                
-                self.display(enemy)
-                
-                if enemy.can_shoot():
-                    
-                    self.__lasers.append(Laser(enemy))
-            
-            else:
-                
-                self.__player.lives -= 1
-                
                 enemy.is_alive = False
                 
     # We handle all the lasers logic
     def handle_lasers(self) -> None:
         
-        self.update_lasers_list()
+        # We update the lasers list
+        self.__lasers = self.update(self.__lasers)
         
+        # We loop through each laser in the list
         for laser in self.__lasers:
             
+            # We check if the laser is still on the screen
             if laser.is_on_screen():
                 
+                # We make it move
                 laser.move()
                 
+                # We display it to the screen
                 self.display(laser)
                 
             else:
-                
+                # Otherwise we set it as dead
                 laser.is_alive = False
+                
+    # We handle all the enemies logic
+    def handle_enemies(self) -> None:
+                
+        # We update the enemies list
+        self.__enemies = self.update(self.__enemies)
+        
+        # We loop through each enemy in the list
+        for enemy in self.__enemies:
+            
+            # We check if the enemy is still on the screen
+            if enemy.is_on_screen():
+                
+                # We make it move
+                enemy.move_down()
+                
+                # We display it to the screen
+                self.display(enemy)
+                
+                # We check if the enemy is able to shoot
+                if enemy.can_shoot():
+                    
+                    # We create a new laser from the enemy's data
+                    self.__lasers.append(Laser(enemy))
+            
+            else:
+                # Otherwise we remove a life from the player
+                self.__player.lives -= 1
+                
+                # And we set the enemy as dead
+                enemy.is_alive = False
+                
+    # We display an object on the screen (the player, an enemy or a laser)
+    def display(self, object :Player|Enemy|Laser) -> None:
+        
+        # We display the object
+        self.__window.blit(object.image, object.get_rect())

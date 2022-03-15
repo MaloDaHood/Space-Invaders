@@ -28,7 +28,7 @@ class Enemy:
         # We set a random shooting speed for the enemy
         self.__shooting_speed = random.choice([0.5, 1, 1.5])
     
-    # We move the enemy by self.speed pixel(s) towards the bottom of the screen
+    # We move the enemy by self.__flying_speed pixel(s) towards the bottom of the screen
     def move_down(self) -> None:
         self.position = (self.position[0], self.position[1] + self.__flying_speed)
         
