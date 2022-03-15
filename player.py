@@ -12,18 +12,10 @@ class Player:
         # We set the number of lives the player has
         self.lives = 3
         
-    # We return the player's position
-    def get_position(self) -> tuple[int, int]:
-        return self.position
-    
     # We set the player's position on the middle of the mouse cursor
     def set_position_on_cursor(self) -> None:
         # We offset the position to make it centered
         self.position = (pygame.mouse.get_pos()[0] - (self.image.get_width() // 2), pygame.mouse.get_pos()[1] - (self.image.get_height() // 2))
-    
-    # We return the player's image
-    def get_image(self) -> pygame.surface.Surface:
-        return self.image
     
     # We return the image's rectangle with the right coordinates
     def get_rect(self) -> pygame.rect.Rect:
@@ -39,7 +31,3 @@ class Player:
             return True
         # Otherwise we return False
         return False
-    
-    # We remove one life from the player
-    def loose_life(self) -> None:
-        self.lives -= 1

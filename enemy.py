@@ -2,7 +2,7 @@ import pygame
 import random
 import time
 
-COLORS = ["R", "G", "B"]
+import constants
 
 class Enemy:
     
@@ -12,51 +12,30 @@ class Enemy:
         self.position = (random.randint(50, 750), 50)
         
         # We give the enemy a random color ("R", "G" or "B")
-        self.color = random.choice(COLORS)
+        self.color = random.choice(constants.COLORS)
         
         # We load the enemy's image using its color
         self.image = pygame.image.load("assets/enemy_" + self.color + ".png")
         
-        self.isAlive = True
+        self.is_alive = True
         
         # We create a clock to know when the enemy can shoot
-        self.start_time = time.time()
+        self.__start_time = time.time()
         
-        # We set a random speed for the enemy
-        self.speed = random.randint(1, 3)
+        # We set a random flying speed for the enemy
+        self.__flying_speed = random.randint(1, 3)
         
-    # We return the enemy's position
-    def get_position(self) -> tuple[int, int]:
-        return self.position
-    
-    # We modify the enemy's position
-    def set_position(self, new_postion :tuple[int, int]) -> None:
-        self.position = new_postion
-    
-    # We return the enemy's color
-    def get_color(self) -> str:
-        return self.color
-    
-    # We return the enemy's image
-    def get_image(self) -> pygame.surface.Surface:
-        return self.image
+        # We set a random shooting speed for the enemy
+        self.__shooting_speed = random.choice([0.5, 1, 1.5])
     
     # We move the enemy by self.speed pixel(s) towards the bottom of the screen
     def move_down(self) -> None:
-        self.position = (self.position[0], self.position[1] + self.speed)
+        self.position = (self.position[0], self.position[1] + self.__flying_speed)
         
-    # We return True if the enemy is alive
-    def is_alive(self) -> bool:
-        return self.isAlive
-    
-    # We kill the enemy
-    def die(self) -> None:
-        self.isAlive = False
-    
     # We check if the enemy is still on the screen
     def is_on_screen(self) -> bool:
         # We check if it hasn't reached the bottom of the screen
-        if self.position[1] < 810:
+        if self.position[1] < constants.WINDOW_HEIGHT + 10:
             return True
         # Otherwise we return False
         return False
@@ -64,9 +43,9 @@ class Enemy:
     # We check if the enemy can shoot
     def can_shoot(self) -> bool:
         # We check if the last shot was more than a second ago
-        if time.time() - self.start_time > 1:
+        if time.time() - self.__start_time > self.__shooting_speed:
             # We reset the clock
-            self.start_time = time.time()
+            self.__start_time = time.time()
             return True
         # Otherwise we return False
         return False
