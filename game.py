@@ -36,6 +36,12 @@ class Game:
         # We load the font
         self.__font = pygame.font.Font("assets/akira.otf", 32)
         
+        # We make the cursor invisible
+        pygame.mouse.set_visible(False)
+        
+        # We set the cursor's position to the center of the window
+        pygame.mouse.set_pos((constants.WINDOW_WIDTH / 2, constants.WINDOW_HEIGHT / 2))
+        
     def run(self) -> None:
         
         # We set the state of the game as running

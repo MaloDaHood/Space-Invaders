@@ -8,8 +8,8 @@ class Enemy:
     
     def __init__(self) -> None:
         
-        # We set the enemy's starting position using a random x value
-        self.position = (random.randint(50, 750), 50)
+        # We set the enemy's starting position using a random x value and a negative y value to make it look like it comes from outside the window
+        self.position = (random.randint(50, 750), -50)
         
         # We give the enemy a random color ("R", "G" or "B")
         self.color = random.choice(constants.COLORS)
@@ -26,7 +26,7 @@ class Enemy:
         self.__flying_speed = random.randint(1, 3)
         
         # We set a random shooting speed for the enemy
-        self.__shooting_speed = random.choice([0.5, 1, 1.5])
+        self.__shooting_speed = random.choice([1, 1.5, 2])
     
     # We move the enemy by self.__flying_speed pixel(s) towards the bottom of the screen
     def move_down(self) -> None:

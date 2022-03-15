@@ -6,7 +6,7 @@ class Player:
     def __init__(self) -> None:
         
         # We set the player's starting position
-        self.position = (350, 700)
+        self.position = (constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT)
         
         # We load the player's image
         self.image = pygame.image.load("assets/player.png")
