@@ -18,7 +18,7 @@ class Laser:
             self.position = (object.position[0] + ((object.image.get_width() // 2) - (self.image.get_width() // 2)), object.position[1] - (object.image.get_height() // 2))
             
             # We set its direction (+/-) and speed (int)
-            self.__direction = -constants.LASER_SPEED
+            self.direction = -constants.LASER_SPEED
         
         # Otherwise it comes from an enemy
         else:
@@ -30,13 +30,13 @@ class Laser:
             self.position = (object.position[0] + ((object.image.get_width() // 2) - (self.image.get_width() // 2)), object.position[1] + (object.image.get_height() // 2) + 20)
 
             # We set its direction (+/-) and speed (int)
-            self.__direction = constants.LASER_SPEED
+            self.direction = constants.LASER_SPEED
             
         self.is_alive = True
             
     # We change the laser's position according to its direction and speed
     def move(self) -> None:
-        self.position = (self.position[0], self.position[1] + self.__direction)
+        self.position = (self.position[0], self.position[1] + self.direction)
         
     # We check if the laser is still on the screen
     def is_on_screen(self) -> bool:
