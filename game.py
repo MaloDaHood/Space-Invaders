@@ -9,12 +9,10 @@ from laser import Laser
 
 class Game:
     
-    def __init__(self) -> None:
+    def __init__(self, window :pygame.surface.Surface) -> None:
         
-        # We create the game window 
-        self.__window = pygame.display.set_mode(constants.WINDOW_SIZE)
-        # We give the game window a name
-        pygame.display.set_caption("Space Invaders")
+        # We get the window
+        self.__window = window
         
         # We load the background image
         self.__backgroud = pygame.image.load("assets/background.png")
@@ -101,9 +99,6 @@ class Game:
             if not self.__player.is_alive() or self.__earth_lives < 1:
                 # We stop the game
                 self.__running = False
-            
-        # We quit the game and end the program
-        pygame.quit()
         
     # We handle every input given by the player
     def handle_inputs(self) -> None:
@@ -115,7 +110,7 @@ class Game:
             if event.type == pygame.QUIT:
                 
                 # We stop the game
-                self.__running = False
+                pygame.quit()
             
             # We check if the player pressed the mouse 
             if event.type == pygame.MOUSEBUTTONDOWN:
