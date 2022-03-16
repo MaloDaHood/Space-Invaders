@@ -14,6 +14,9 @@ class Player:
         # We set the number of lives the player has
         self.lives = constants.PLAYER_LIVES
         
+        # We keep track of the number of enemies the player kills
+        self.killed_enemies = 0
+        
     # We set the player's position on the middle of the mouse cursor
     def set_position_on_cursor(self) -> None:
         # We offset the position to make it centered

@@ -67,9 +67,6 @@ class Game:
             # We display the earth on the screen
             self.__window.blit(self.__earth, (0, constants.WINDOW_HEIGHT - constants.EARTH_HEIGHT))
                         
-            # We display the number of lives the player has left
-            self.display_lives()   
-                    
             # We set the player's position on the mouse cursor
             self.__player.set_position_on_cursor()
             
@@ -84,12 +81,15 @@ class Game:
             
             # We display the player on the screen
             self.display(self.__player)
+            
+            # We display all the text
+            self.display_text()   
   
             # We update the window to show our changes
             pygame.display.flip()
 
             # We check when was the last time we spawned an enemy and spawn new ones randomly
-            if time.time() - self.__start_time > random.randint(1, 4):
+            if time.time() - self.__start_time > random.randint(1, 3):
                 
                 # We create a new enemy
                 self.__enemies.append(Enemy())
@@ -123,8 +123,8 @@ class Game:
                 # We create a new laser
                 self.__lasers.append(Laser(self.__player))
               
-    # We display the number of lives the player and the earth have left  
-    def display_lives(self) -> None:
+    # We display the number of lives for the player and the earth and the number of killed enemies
+    def display_text(self) -> None:
         
         # We define the text we want to dispay for the player's lives
         text = self.__font.render(str(self.__player.lives) + "/" + str(constants.PLAYER_LIVES), True, (255, 0, 0))
@@ -137,6 +137,12 @@ class Game:
         
         # We display the earth's lives to the sreen
         self.__window.blit(text, (constants.WINDOW_WIDTH - (constants.WINDOW_WIDTH // 8), constants.WINDOW_HEIGHT - constants.EARTH_HEIGHT))
+        
+        # We define the text we want to dispay for the number of enemies killed
+        text = self.__font.render(str(self.__player.killed_enemies), True, (255, 0, 0))
+        
+        # We display the number of enemies killed to the screen
+        self.__window.blit(text, (20, 20))
         
     # We return an updated version of the given list (we remove the dead enemies or lasers)
     def update(self, origin_list :list) -> list:
@@ -176,6 +182,12 @@ class Game:
                     
                     # We kill the enemy
                     enemy.is_alive = False
+                    
+                    # We check if the laser was shot by the player
+                    if laser.direction < 0:
+                        
+                        # We add a kill to its counter
+                        self.__player.killed_enemies += 1
                     
             # We check if the laser intersects with the player 
             if laser.get_rect().colliderect(self.__player.get_rect()):
