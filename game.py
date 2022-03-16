@@ -21,6 +21,12 @@ class Game:
         # We scale the background to fit the window
         self.__backgroud = pygame.transform.scale(self.__backgroud, constants.WINDOW_SIZE)
         
+        self.__earth = pygame.image.load("assets/earth.png")
+        
+        self.__earth = pygame.transform.scale(self.__earth, (constants.WINDOW_WIDTH, constants.EARTH_HEIGHT))
+        
+        self.__earth_lives = constants.EARTH_LIVES
+        
         # The object representing the player
         self.__player = Player()
         
@@ -55,6 +61,8 @@ class Game:
             
             # We display the background on the screen
             self.__window.blit(self.__backgroud, (0, 0))
+            
+            self.__window.blit(self.__earth, (0, constants.WINDOW_HEIGHT - constants.EARTH_HEIGHT))
                         
             # We display the number of lives the player has left
             self.display_lives()   
@@ -87,7 +95,7 @@ class Game:
                 self.__start_time = time.time()
             
             # We check if the player is dead
-            if not self.__player.is_alive():
+            if not self.__player.is_alive() or self.__earth_lives < 1:
                 # We stop the game
                 self.__running = False
             
@@ -112,14 +120,18 @@ class Game:
                 # We create a new laser
                 self.__lasers.append(Laser(self.__player))
               
-    # We display the number of lives the player has left  
+    # We display the number of lives the player and the earth have left  
     def display_lives(self) -> None:
         
         # We define the text we want to dispay
-        text = self.__font.render(str(self.__player.lives) + "/" + str(constants.NUMBER_OF_LIVES), True, (255, 0, 0))
+        text = self.__font.render(str(self.__player.lives) + "/" + str(constants.PLAYER_LIVES), True, (255, 0, 0))
         
         # We display it to the sreen
         self.__window.blit(text, (constants.WINDOW_WIDTH - (constants.WINDOW_WIDTH // 8), 20))
+        
+        text = self.__font.render(str(self.__earth_lives) + "/" + str(constants.EARTH_LIVES), True, (255, 0, 0))
+        
+        self.__window.blit(text, (constants.WINDOW_WIDTH - (constants.WINDOW_WIDTH // 8), constants.WINDOW_HEIGHT - constants.EARTH_HEIGHT))
         
     # We return an updated version of the given list (we remove the dead enemies or lasers)
     def update(self, origin_list :list) -> list:
@@ -232,7 +244,7 @@ class Game:
             
             else:
                 # Otherwise we remove a life from the player
-                self.__player.lives -= 1
+                self.__earth_lives -= 1
                 
                 # And we set the enemy as dead
                 enemy.is_alive = False

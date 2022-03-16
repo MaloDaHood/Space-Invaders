@@ -12,7 +12,7 @@ class Player:
         self.image = pygame.image.load("assets/player.png")
         
         # We set the number of lives the player has
-        self.lives = constants.NUMBER_OF_LIVES
+        self.lives = constants.PLAYER_LIVES
         
     # We set the player's position on the middle of the mouse cursor
     def set_position_on_cursor(self) -> None:

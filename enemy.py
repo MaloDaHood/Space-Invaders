@@ -35,7 +35,7 @@ class Enemy:
     # We check if the enemy is still on the screen
     def is_on_screen(self) -> bool:
         # We check if it hasn't reached the bottom of the screen
-        if self.position[1] < constants.WINDOW_HEIGHT + 10:
+        if self.position[1] < constants.WINDOW_HEIGHT - constants.EARTH_HEIGHT - 10:
             return True
         # Otherwise we return False
         return False
