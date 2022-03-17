@@ -9,7 +9,7 @@ class Enemy:
     def __init__(self) -> None:
         
         # We set the enemy's starting position using a random x value and a negative y value to make it look like it comes from outside the window
-        self.position = (random.randint(50, 750), -50)
+        self.position = (random.randint(50, constants.WINDOW_WIDTH - 50), -50)
         
         # We give the enemy a random color ("R", "G" or "B")
         self.color = random.choice(constants.COLORS)
@@ -22,11 +22,11 @@ class Enemy:
         # We create a clock to know when the enemy can shoot
         self.__start_time = time.time()
         
-        # We set a random flying speed for the enemy
-        self.__flying_speed = random.randint(1, 3)
+        # We set a flying speed for the enemy
+        self.__flying_speed = constants.FLYING_SPEED
         
         # We set a random shooting speed for the enemy
-        self.__shooting_speed = random.choice([0.5, 1, 1, 1.5])
+        self.__shooting_speed = constants.SHOOTING_SPEED
     
     # We move the enemy by self.__flying_speed pixel(s) towards the bottom of the screen
     def move_down(self) -> None:

@@ -40,7 +40,7 @@ class Game:
         self.__start_time = time.time()
         
         # We load the font
-        self.__font = pygame.font.Font("assets/akira.otf", 32)
+        self.__font = pygame.font.Font("assets/akira.otf", constants.GAME_FONT_SIZE)
         
         # We make the cursor invisible
         pygame.mouse.set_visible(False)
